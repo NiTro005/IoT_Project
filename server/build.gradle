@@ -1,18 +1,29 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+    id 'application'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.20'
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+application {
+    mainClass = 'com.example.MainKt'
 }
 
 dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-}
+    // Ktor
+    implementation 'io.ktor:ktor-server-core:2.3.5'
+    implementation 'io.ktor:ktor-server-netty:2.3.5'
+    implementation 'io.ktor:ktor-serialization-kotlin-json:2.3.5'
+    implementation 'io.ktor:ktor-server-cors:2.3.5'
 
-test {
-    useJUnitPlatform()
+    // Database
+    implementation 'org.jetbrains.exposed:exposed-core:0.44.0'
+    implementation 'org.jetbrains.exposed:exposed-jdbc:0.44.0'
+    implementation 'org.postgresql:postgresql:42.6.0'
+
+    // Logging
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+
+    // Tests
+    testImplementation 'io.ktor:ktor-server-tests:2.3.5'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test:1.9.20'
 }
