@@ -1,2 +1,5 @@
 rootProject.name = 'IoT_Project'
+include 'android_app'
+include 'server'
+include 'web_frontend'
 
