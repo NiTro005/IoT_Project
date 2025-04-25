@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="web_frontend">
+    <output-path>$PROJECT_DIR$/web_frontend/build/libs</output-path>
+    <root id="archive" name="web_frontend.jar">
+      <element id="module-output" name="IoT_Project.web_frontend.main" />
+    </root>
+  </artifact>
+</component>

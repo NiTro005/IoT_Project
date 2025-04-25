@@ -1,24 +1,36 @@
 plugins {
-    id 'org.jetbrains.kotlin.js' version '1.9.20'
+    id 'org.jetbrains.kotlin.js'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+group = 'ru.risdeveau'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://jitpack.io' }
 }
 
 kotlin {
-    js {
+    js(IR) {
+        binaries.executable()
         browser {
-            binaries.executable()
+            commonWebpackConfig {
+                // Конфигурация Webpack, если необходимо
+            }
         }
     }
 }
 
 dependencies {
-    implementation 'io.ktor:ktor-client-js:2.3.5'
-    implementation 'io.ktor:ktor-client-content-negotiation:2.3.5'
-    implementation 'io.ktor:ktor-serialization-kotlin-json:2.3.5'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
 
-    implementation npm('leaflet', '1.9.4')
+    // Ktor клиент для фронтенда
+    implementation "io.ktor:ktor-client-core:2.3.5"
+    implementation "io.ktor:ktor-client-content-negotiation:2.3.5"
+    implementation "io.ktor:ktor-serialization-kotlinx-json:2.3.5"
+    implementation "io.ktor:ktor-client-js:2.3.5"
 
-    // Опционально для React:
-    implementation enforcedPlatform('org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:1.0.0-pre.605')
-    implementation 'org.jetbrains.kotlin-wrappers:kotlin-react'
-    implementation 'org.jetbrains.kotlin-wrappers:kotlin-react-dom'
+    // Другие зависимости фронтенда
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
 }
