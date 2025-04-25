@@ -1,7 +1,18 @@
-rootProject.name = 'IoT_Project'
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
 
-include ':server'
-include ':web_frontend'
-include 'web_frontend'
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+rootProject.name = 'IoT_Project' // lowercase для единообразия
+include 'server'
 include 'web_frontend'
 
