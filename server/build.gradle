@@ -1,42 +1,37 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
-    id 'application'
+    id 'io.ktor.plugin'
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
-group = 'ru.risdeveau'
-version = '1.0'
+group = "ru.risdeveau.geotracker"
+version = "0.0.1"
+mainClassName = "ru.risdeveau.geotracker.ApplicationKt"
 
-application {
-    mainClass = 'ru.risdeveau.geotracker.ApplicationKt'
-}
+def ktor_version = "3.1.2"
+def logback_version = "1.4.11"
+def kotlin_version = "2.1.10"
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    // Ktor
-    implementation 'io.ktor:ktor-server-core:2.3.5'
-    implementation 'io.ktor:ktor-server-netty:2.3.5'
-    implementation 'io.ktor:ktor-serialization-kotlinx-json:2.3.5'
-    implementation 'io.ktor:ktor-server-cors:2.3.5'
-    implementation 'io.ktor:ktor-server-content-negotiation:2.3.5'
+    implementation "io.ktor:ktor-server-core:$ktor_version"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
+    implementation "io.ktor:ktor-server-content-negotiation:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "io.ktor:ktor-serialization-kotlinx-json:$ktor_version"
 
-    // Database
-    implementation 'org.jetbrains.exposed:exposed-core:0.45.0'
-    implementation 'org.jetbrains.exposed:exposed-jdbc:0.45.0'
-    implementation 'org.postgresql:postgresql:42.6.0'
+    testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+}
 
-    // Supabase (только PostgREST)
-    implementation platform('io.github.jan-tennert.supabase:bom:3.1.4')
-    implementation 'io.github.jan-tennert.supabase:postgrest-kt'
+kotlin {
+    jvmToolchain(17)
+}
 
-    // Logging
-    implementation 'ch.qos.logback:logback-classic:1.4.11'
-
-    // Tests
-    testImplementation 'io.ktor:ktor-server-tests:2.3.5'
-    testImplementation 'org.jetbrains.kotlin:kotlin-test:1.9.20'
+tasks.named('run') {
+    dependsOn('classes')
+    classpath = sourceSets.main.runtimeClasspath
 }
