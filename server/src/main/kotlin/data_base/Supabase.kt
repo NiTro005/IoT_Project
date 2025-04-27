@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory
 object Supabase {
     private val log = LoggerFactory.getLogger("SupabaseConfig")
     private const val SUPABASE_URL = "https://rumvwrachgjguyqejuhs.supabase.co"
-    private val SUPABASE_KEY = System.getenv("SUPABASE_KEY") ?: "your-anon-key"
+    private val SUPABASE_KEY = System.getenv("SUPABASE_KEY") ?: "default"
 
     init {
-        log.info("Initializing Supabase with key prefix: {}", SUPABASE_KEY.take(3))
+        log.info("Initializing Supabase with key prefix: ${SUPABASE_KEY.take(7)}")
     }
     val client = createSupabaseClient(
         supabaseUrl = SUPABASE_URL,
-        supabaseKey = SUPABASE_KEY ?: throw IllegalStateException("Supabase key not configured")
+        supabaseKey = SUPABASE_KEY
     ) { install(Postgrest) }
 }
