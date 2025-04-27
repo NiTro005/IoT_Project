@@ -6,22 +6,17 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
-
-import ru.risdeveau.geotracker.Controllers.moduleController;
 import ru.risdeveau.geotracker.data_base.Supabase
+import ru.risdeveau.geotracker.Controllers.DBController
 
-fun Application.module() {
-    val moduleController = moduleController();
-
+fun Application.DBRoutes() {
+    install(ContentNegotiation) {
+        json()
+    }
+    val DBController = DBController();
     routing {
-        get("/",){
-            moduleController.working(call);
+        get("/test_connect_db") {
+            DBController.connectDB(call);
         }
-
-        get("/api/status") {
-            moduleController.apiStatus(call);
-        }
-
-        get("/:login/main", ) {}
     }
 }
