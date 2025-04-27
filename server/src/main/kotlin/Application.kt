@@ -5,6 +5,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import ru.risdeveau.geotracker.Routers.module
 import ru.risdeveau.geotracker.Routers.DBRoutes
+import ru.risdeveau.geotracker.Surealization.configureSurealization
 
 fun main() {
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
@@ -13,6 +14,7 @@ fun main() {
     embeddedServer(Netty, port, host){
         module();
         DBRoutes();
+        configureSurealization();
     }.start(wait = true)
 }
 

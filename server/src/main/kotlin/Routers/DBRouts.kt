@@ -10,9 +10,6 @@ import ru.risdeveau.geotracker.data_base.Supabase
 import ru.risdeveau.geotracker.Controllers.DBController
 
 fun Application.DBRoutes() {
-    install(ContentNegotiation) {
-        json()
-    }
     val DBController = DBController();
     routing {
         get("/test_connect_db") {
