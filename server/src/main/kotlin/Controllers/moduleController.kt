@@ -12,4 +12,12 @@ class moduleController {
     suspend fun apiStatus(call: ApplicationCall) {
         call.respond(/*mapOf("status" to "OK", "version" to "0.0.1")*/ "Ok")
     }
+
+    suspend fun getMap(call: ApplicationCall){
+
+    }
+
+    suspend fun postMap(call: ApplicationCall){
+
+    }
 }

@@ -22,6 +22,9 @@ fun Application.module() {
             moduleController.apiStatus(call);
         }
 
-        get("/:login/main", ) {}
+        get("/map") {
+
+        }
+        
     }
 }
