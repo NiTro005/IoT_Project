@@ -6,6 +6,5 @@ import java.time.Instant
 data class LocationData(
     val user_name: String,
     val lon: Double,
-    val lat: Double,
-    val created_at: String = Instant.now().toString()
+    val lat: Double
 )

@@ -5,6 +5,7 @@ import io.github.jan.supabase.postgrest.query.Count
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -31,48 +32,25 @@ fun Application.module() {
     }
     routing {
         get("/") {
-            call.respondText("Hello from GeoTracker API!")
+            call.respondText("Server is running")
         }
 
-        get("/test-db-connection") {
+        get("/check-db-connection") {
             try {
-                val count = Supabase.client.postgrest["locations"]
-                    .select(count = Count.EXACT) {
-                        eq("user_name", "test-user")
-                    }
+                val result = Supabase.client.postgrest["locations"]
+                    .select(count = Count.EXACT)
                     .decodeSingle<Map<String, Int>>()
 
                 call.respond(mapOf(
                     "status" to "OK",
-                    "message" to "Connection to Supabase successful",
-                    "test_records_count" to count["count"]
+                    "message" to "Database connection successful",
+                    "count" to (result["count"] ?: 0)
                 ))
             } catch (e: Exception) {
-                call.respond(
-                    HttpStatusCode.ServiceUnavailable,
-                    mapOf(
-                        "error" to "DB connection failed",
-                        "details" to e.message
-                    )
-                )
-            }
-        }
-
-        post("/test-db-insert") {
-            val testData = LocationData(
-                user_name = "test-user",
-                lon = 0.0,
-                lat = 0.0
-            )
-
-            try {
-                Supabase.client.postgrest["locations"].insert(testData)
-                call.respond(mapOf("status" to "OK", "message" to "Test data inserted"))
-            } catch (e: Exception) {
-                call.respond(
-                    HttpStatusCode.InternalServerError,
-                    mapOf("error" to "Insert failed: ${e.message}")
-                )
+                call.respond(mapOf(
+                    "status" to "error",
+                    "message" to "Database connection failed: ${e.message}"
+                ))
             }
         }
     }

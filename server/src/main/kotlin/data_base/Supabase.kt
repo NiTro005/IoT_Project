@@ -1,13 +1,19 @@
 package ru.risdeveau.geotracker.data_base
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.ktor.server.response.*
+import org.slf4j.LoggerFactory
 
 object Supabase {
+    private val log = LoggerFactory.getLogger("SupabaseConfig")
     private const val SUPABASE_URL = "https://rumvwrachgjguyqejuhs.supabase.co"
-    private const val SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1bXZ3cmFjaGdqZ3V5cWVqdWhzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NTI1NjUxMiwiZXhwIjoyMDYwODMyNTEyfQ.9SXfmpisYqbHXClmk82wnFho59UWsutNS_s4FQi1SrI"
+    private val SUPABASE_KEY = System.getenv("SUPABASE_KEY") ?: "your-anon-key"
 
+    init {
+        log.info("Initializing Supabase with key prefix: {}", SUPABASE_KEY.take(3))
+    }
     val client = createSupabaseClient(
         supabaseUrl = SUPABASE_URL,
-        supabaseKey = SUPABASE_KEY
-    ) {install(Postgrest)}
+        supabaseKey = SUPABASE_KEY ?: throw IllegalStateException("Supabase key not configured")
+    ) { install(Postgrest) }
 }
