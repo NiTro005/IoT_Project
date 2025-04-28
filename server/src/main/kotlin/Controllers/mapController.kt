@@ -9,7 +9,7 @@ import ru.risdeveau.geotracker.data.frontData
 class mapController {
     suspend fun mapPost(call: ApplicationCall){
         val frontData = frontData("kikita", 23.3, 11.4);//TODO("Получние данных по нику пользователя из БД")
-        call.respond(HttpStatusCode.OK, frontData);
+        //call.respond(HttpStatusCode.OK, frontData);
     }
 
     suspend fun mapGet(call: ApplicationCall){

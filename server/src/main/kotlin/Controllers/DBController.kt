@@ -1,31 +1,41 @@
 package ru.risdeveau.geotracker.Controllers
 
-import io.github.jan.supabase.postgrest.postgrest
+import Supabase
+import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Count
 import io.ktor.server.application.*
-import ru.risdeveau.geotracker.data_base.Supabase
+import io.ktor.server.response.*
+import io.ktor.http.*
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ApiResponse(
+    val status: String,
+    val message: String,
+    val count: Long? = null,
+    val details: String? = null
+)
 
 class DBController {
-    suspend fun connectDB(call: ApplicationCall){
+    suspend fun connectDB(call: ApplicationCall) {
         try {
-            val result = Supabase.client.postgrest["locations"]
-                .select(count = Count.EXACT)
-                .decodeSingle<Map<String, Int>>()
-
+            val result = Supabase.client.from("locations").select{ count(Count.EXACT) }.countOrNull()
             call.respond(
-                mapOf(
-                    "status" to "OK",
-                    "message" to "Database connection successful",
-                    "count" to (result["count"] ?: 0)
-                ),
-                typeInfo = TODO()
+                HttpStatusCode.OK,
+                ApiResponse(
+                    status = "OK",
+                    message = "Database connection successful",
+                    count = result
+                )
             )
         } catch (e: Exception) {
             call.respond(
-                mapOf(
-                    "status" to "error",
-                    "message" to "Database connection failed: ${e.message}"
-                ), typeInfo = TODO()
+                HttpStatusCode.ServiceUnavailable,
+                ApiResponse(
+                    status = "error",
+                    message = "Database connection failed",
+                    details = e.message
+                )
             )
         }
     }

@@ -1,8 +1,11 @@
 package ru.risdeveau.geotracker
 
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Count
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import kotlinx.coroutines.runBlocking
 import ru.risdeveau.geotracker.Routers.module
 import ru.risdeveau.geotracker.Routers.DBRoutes
 import ru.risdeveau.geotracker.Surealization.configureSurealization
