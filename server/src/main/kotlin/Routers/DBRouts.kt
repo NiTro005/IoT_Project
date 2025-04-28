@@ -13,29 +13,8 @@ import ru.risdeveau.geotracker.data_base.LocationData
 fun Application.DBRoutes() {
     val DBController = DBController();
     routing {
-        get("/test_connect_db") {
-            DBController.connectDB(call);
-        }
-        get ("/test_insert_in_DB") {
-            val data = LocationData("Kirill", 12.0, 45.0)
-            val result = DBController.insert(data)
-            if (result.isSuccess) {
-                call.respond(
-                    HttpStatusCode.Created,
-                    ApiResponse(
-                        status = "Create",
-                        message = "Insert successful",
-                    )
-                )
-            } else {
-                call.respond(
-                    HttpStatusCode.ExpectationFailed,
-                    ApiResponse(
-                        status = "ERROR",
-                        message = "Insert failure",
-                    )
-                )
-            }
+        get("/health") {
+            DBController.healthCheck(call);
         }
     }
 }

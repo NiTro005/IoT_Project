@@ -18,26 +18,12 @@ data class ApiResponse(
 )
 
 class DBController {
-    suspend fun connectDB(call: ApplicationCall) {
+    suspend fun healthCheck(call: ApplicationCall) {
         try {
             val result = Supabase.client.from("locations").select{ count(Count.EXACT) }.countOrNull()
-            call.respond(
-                HttpStatusCode.OK,
-                ApiResponse(
-                    status = "OK",
-                    message = "Database connection successful",
-                    count = result
-                )
-            )
+            call.respond(HttpStatusCode.OK)
         } catch (e: Exception) {
-            call.respond(
-                HttpStatusCode.ServiceUnavailable,
-                ApiResponse(
-                    status = "error",
-                    message = "Database connection failed",
-                    details = e.message
-                )
-            )
+            call.respond(HttpStatusCode.ServiceUnavailable)
         }
     }
 
