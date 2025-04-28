@@ -11,7 +11,5 @@ object Supabase {
     val client = createSupabaseClient(
         supabaseUrl = SUPABASE_URL,
         supabaseKey = SUPABASE_KEY
-    ) {
-        install(Postgrest)
-    }
+    ) { install(Postgrest) }
 }

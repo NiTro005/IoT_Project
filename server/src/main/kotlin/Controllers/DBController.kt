@@ -7,6 +7,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.http.*
 import kotlinx.serialization.Serializable
+import ru.risdeveau.geotracker.data_base.LocationData
 
 @Serializable
 data class ApiResponse(
@@ -37,6 +38,18 @@ class DBController {
                     details = e.message
                 )
             )
+        }
+    }
+
+    suspend fun insert(data: LocationData): Result<Unit> {
+        if (data.lat !in -90.0..90.0 || data.lon !in -180.0..180.0) {
+            return Result.failure(IllegalArgumentException("Invalid coordinates. Lat must be between -90 and 90, Lon between -180 and 180"))
+        }
+        return try {
+            Supabase.client.from("locations").insert(data)
+            Result.success(Unit)
+        } catch (e: Exception){
+            Result.failure(e)
         }
     }
 }
