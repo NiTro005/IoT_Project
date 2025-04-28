@@ -8,7 +8,6 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 
 import ru.risdeveau.geotracker.Controllers.moduleController;
-import ru.risdeveau.geotracker.data_base.Supabase
 
 fun Application.module() {
     val moduleController = moduleController();
@@ -22,9 +21,5 @@ fun Application.module() {
             moduleController.apiStatus(call);
         }
 
-        get("/map") {
-
-        }
-        
     }
 }
