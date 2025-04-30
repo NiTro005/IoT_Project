@@ -1,6 +1,5 @@
-package ru.risdeveau.geotracker.data_base
+package ru.risdeveau.geotracker.models.dto
 import kotlinx.serialization.Serializable
-import java.time.Instant
 
 @Serializable
 data class LocationData(

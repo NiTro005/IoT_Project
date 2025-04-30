@@ -1,4 +1,4 @@
-package ru.risdeveau.geotracker.Surealization
+package ru.risdeveau.geotracker.config
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
