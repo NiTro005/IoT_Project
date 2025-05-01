@@ -42,11 +42,37 @@ object LocationRepos {
         }
     }
     suspend fun getAllUsersInOneDay(day:String): List<LocationData>{
-        TODO()
+        val dayStart = Instant.parse("${day}T00:00:00Z")
+        val dayEnd = dayStart.plus(1, DateTimeUnit.DAY, TimeZone.UTC)
+        return try {
+
+            Supabase.client.from("locations").select {
+                filter {
+                    gt("created_at", dayStart.toString())
+                    lt("created_at", dayEnd.toString())
+                }
+            }.decodeList<LocationData>()
+        } catch (e: Exception){
+            emptyList<LocationData>()
+        }
     }
-    suspend fun getUserInOneDay(day:String): List<LocationData> {
-        TODO()
+    suspend fun getUserInOneDay(day:String, user:String): List<LocationData> {
+        val dayStart = Instant.parse("${day}T00:00:00Z")
+        val dayEnd = dayStart.plus(1, DateTimeUnit.DAY, TimeZone.UTC)
+        return try {
+
+            Supabase.client.from("locations").select {
+                filter {
+                    gt("created_at", dayStart.toString())
+                    lt("created_at", dayEnd.toString())
+                    eq("user_name", user)
+                }
+            }.decodeList<LocationData>()
+        } catch (e: Exception){
+            emptyList<LocationData>()
+        }
     }
+
     suspend fun countOfRows(): Long? =
         Supabase.client.from("locations").select{ count(Count.EXACT) }.countOrNull()
 }
