@@ -7,8 +7,11 @@ import io.github.jan.supabase.postgrest.Postgrest
 
 object Supabase {
     private const val SUPABASE_URL = "https://rumvwrachgjguyqejuhs.supabase.co"
-    private val SUPABASE_KEY = System.getenv("SUPABASE_KEY")
+    private val SUPABASE_KEY = System.getenv("SUPABASE_KEY")?: throw Exception("Data base key not found")
 
+    init{
+        print(SUPABASE_KEY)
+    }
     val client: SupabaseClient by lazy {
         createSupabaseClient(
             supabaseUrl = SUPABASE_URL,

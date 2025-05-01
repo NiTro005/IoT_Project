@@ -7,26 +7,16 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.http.*
 import ru.risdeveau.geotracker.models.dto.LocationData
+import ru.risdeveau.geotracker.models.repositories.LocationRepos
 
 class DBController {
     suspend fun healthCheck(call: ApplicationCall) {
         try {
-            val result = Supabase.client.from("locations").select{ count(Count.EXACT) }.countOrNull()
-            call.respond(HttpStatusCode.OK)
+            val result = LocationRepos.countOfRows()
+            call.respond(HttpStatusCode.OK, mapOf
+                ("status" to "ok", "message" to "Data base connect successful", "count" to result.toString()))
         } catch (e: Exception) {
             call.respond(HttpStatusCode.ServiceUnavailable)
-        }
-    }
-
-    suspend fun insert(data: LocationData): Result<Unit> {
-        if (data.lat !in -90.0..90.0 || data.lon !in -180.0..180.0) {
-            return Result.failure(IllegalArgumentException("Invalid coordinates. Lat must be between -90 and 90, Lon between -180 and 180"))
-        }
-        return try {
-            Supabase.client.from("locations").insert(data)
-            Result.success(Unit)
-        } catch (e: Exception){
-            Result.failure(e)
         }
     }
 }
