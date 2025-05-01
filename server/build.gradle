@@ -29,6 +29,7 @@ dependencies {
     implementation 'io.github.jan-tennert.supabase:postgrest-kt'
 
     implementation "ch.qos.logback:logback-classic:1.4.11"
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
     testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
@@ -38,7 +39,7 @@ kotlin {
     jvmToolchain(21)
 }
 
-tasks.named('run') {
+tasks.named('run', JavaExec) {
     dependsOn('classes')
     classpath = sourceSets.main.runtimeClasspath
 }
