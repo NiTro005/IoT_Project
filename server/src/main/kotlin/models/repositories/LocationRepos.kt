@@ -1,12 +1,14 @@
 package ru.risdeveau.geotracker.models.repositories
 
+import io.github.jan.supabase.auth.PostgrestFilterDSL
+import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Count
+import io.github.jan.supabase.postgrest.query.filter.PostgrestFilterBuilder
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.*
 import ru.risdeveau.geotracker.config.Supabase
 import ru.risdeveau.geotracker.models.dto.LocationData
-import java.time.temporal.ChronoUnit
 
 object LocationRepos {
     private const val CLEAN_PERIOD = 5
@@ -41,36 +43,31 @@ object LocationRepos {
             println("Failed to clean old locations: ${e.message}")
         }
     }
-    suspend fun getAllUsersInOneDay(day:String): List<LocationData>{
+    private suspend fun getLocationsFilter(
+        day:String,
+        additionalFilter: PostgrestFilterBuilder.()->Unit = { }
+    ): List<LocationData>{
         val dayStart = Instant.parse("${day}T00:00:00Z")
         val dayEnd = dayStart.plus(1, DateTimeUnit.DAY, TimeZone.UTC)
         return try {
-
             Supabase.client.from("locations").select {
                 filter {
                     gt("created_at", dayStart.toString())
                     lt("created_at", dayEnd.toString())
+                    this.additionalFilter()
                 }
             }.decodeList<LocationData>()
         } catch (e: Exception){
             emptyList<LocationData>()
         }
     }
-    suspend fun getUserInOneDay(day:String, user:String): List<LocationData> {
-        val dayStart = Instant.parse("${day}T00:00:00Z")
-        val dayEnd = dayStart.plus(1, DateTimeUnit.DAY, TimeZone.UTC)
-        return try {
 
-            Supabase.client.from("locations").select {
-                filter {
-                    gt("created_at", dayStart.toString())
-                    lt("created_at", dayEnd.toString())
-                    eq("user_name", user)
-                }
-            }.decodeList<LocationData>()
-        } catch (e: Exception){
-            emptyList<LocationData>()
-        }
+    suspend fun getAllUsersInOneDay(day:String):List<LocationData>{
+        return getLocationsFilter(day)
+    }
+
+    suspend fun getUserInOneDay(day:String, user:String): List<LocationData> {
+        return getLocationsFilter(day) {eq("user_name", user)}
     }
 
     suspend fun countOfRows(): Long? =
