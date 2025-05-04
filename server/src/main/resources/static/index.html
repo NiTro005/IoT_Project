@@ -159,6 +159,8 @@
         userItem.setAttribute('data-user-id', userId);
         userItem.textContent = `User ${userId}`;
 
+        userItem.style.backgroundColor = users[userId].color;
+
         userItem.addEventListener('click', function() {
             const clickedUserId = this.getAttribute('data-user-id');
 
