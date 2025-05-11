@@ -17,7 +17,6 @@ class mapController {
         call.respond(HttpStatusCode.OK, data)
     }
 
-    suspend fun mapGet(call: ApplicationCall){
     suspend fun mapUserPost (call: ApplicationCall) {
         val user_name = call.parameters["user_name"].toString()
         val today: String = LocalDate.now().toString();
@@ -25,5 +24,10 @@ class mapController {
         call.respond(HttpStatusCode.OK, data)
     }
 
+    suspend fun mapGet(call: ApplicationCall){
+        val filePath = "static/index.html"
+        val file = File(this::class.java.classLoader.getResource(filePath)!!.toURI())
+        call.respondFile(file)
     }
+    
 }
