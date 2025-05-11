@@ -13,8 +13,12 @@ fun Application.mapRouts() {
             mapController.mapGet(call);
         }
 
-        post("/map"){
+        post("api/map"){
             mapController.mapPost(call);
+        }
+
+        post("api/map/user/"){
+            mapController.mapUserPost(call);
         }
     }
 }
