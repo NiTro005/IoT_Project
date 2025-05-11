@@ -18,6 +18,12 @@ class mapController {
     }
 
     suspend fun mapGet(call: ApplicationCall){
+    suspend fun mapUserPost (call: ApplicationCall) {
+        val user_name = call.parameters["user_name"].toString()
+        val today: String = LocalDate.now().toString();
+        val data : List<LocationData> = getUserInOneDay(today, user_name)
+        call.respond(HttpStatusCode.OK, data)
+    }
 
     }
 }
