@@ -92,7 +92,7 @@
     let activeUserId = null;
 
     function connectWebSocket() {
-        const socket = new WebSocket('wss://map/ws');
+        const socket = new WebSocket('wss://geo.tmp.codrs.ru/map/ws');
             
         socket.onopen = () => {
             console.log('WebSocket connected');
