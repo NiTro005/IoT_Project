@@ -92,7 +92,7 @@
     let activeUserId = null;
 
     function connectWebSocket() {
-        const socket = new WebSocket('wss://...');
+        const socket = new WebSocket('wss://map/ws');
             
         socket.onopen = () => {
             console.log('WebSocket connected');
