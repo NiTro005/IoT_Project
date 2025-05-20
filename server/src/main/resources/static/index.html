@@ -18,9 +18,9 @@
 
         .container {
             display: flex;
-            width: 95%;
-            max-width: 1200px;
-            height: 80vh;
+            width: 100%;
+            max-width: 1700px;
+            height: 100vh;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 8px;
             overflow: hidden;
@@ -91,6 +91,37 @@
     const users = {};
     let activeUserId = null;
 
+    function connectWebSocket() {
+        const socket = new WebSocket('wss://map/ws');
+            
+        socket.onopen = () => {
+            console.log('WebSocket connected');
+        };
+            
+        socket.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                    
+                if (data.id && data.lat && data.lng) {
+                    updateUserPosition(data.id, data.lat, data.lng);
+                }
+            } catch (error) {
+                console.error('Error parsing message:', error);
+            }
+        };
+            
+        socket.onclose = () => {
+            console.log('WebSocket disconnected');
+            setTimeout(connectWebSocket, 5000);
+        };
+            
+        socket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+            
+        return socket;
+    }
+
     function updateUserPosition(userId, lat, lng) {
         if (!users[userId]) {
             users[userId] = {
@@ -106,7 +137,7 @@
             users[userId].polyline = L.polyline([], {
                 color: users[userId].color,
                 weight: 4,
-                opacity: 0.7
+                opacity: 1
             });
 
             users[userId].marker = L.circleMarker([lat, lng], {
@@ -115,7 +146,7 @@
                 color: "#000",
                 weight: 1,
                 opacity: 1,
-                fillOpacity: 0.8
+                fillOpacity: 1
             }).bindPopup(`User ${userId}`);
 
             if (activeUserId === null) {
@@ -158,25 +189,27 @@
         userItem.className = 'user-item';
         userItem.setAttribute('data-user-id', userId);
         userItem.textContent = `User ${userId}`;
+        userItem.style.backgroundColor = users[userId].color;
 
-        userItem.addEventListener('click', function() {
+        userItem.addEventListener('click', () => {
             const clickedUserId = this.getAttribute('data-user-id');
 
-            if (activeUserId === clickedUserId) {
-                activeUserId = null;
-                this.classList.remove('active');
-                showAllUsersRoutes();
-            } else {
-                activeUserId = clickedUserId;
+                if (activeUserId === clickedUserId) {
+                    activeUserId = null;
+                    this.classList.remove('active');
+                    showAllUsersRoutes();
+                } else {
+                    activeUserId = clickedUserId;
 
-                document.querySelectorAll('.user-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                this.classList.add('active');
+                    document.querySelectorAll('.user-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    this.classList.add('active');
 
-                showOnlyUserRoute(clickedUserId);
-                focusOnUser(clickedUserId, true);
-            }
+                    showOnlyUserRoute(clickedUserId);
+                    focusOnUser(clickedUserId, true);
+                }
+            
         });
 
         usersList.appendChild(userItem);
@@ -233,7 +266,10 @@
         return color;
     }
 
-    function simulateDataUpdates() {
+    document.addEventListener('DOMContentLoaded', () => {
+        connectWebSocket();
+    });
+    /*function simulateDataUpdates() {
         const centerLat = 56.32569;
         const centerLng = 44.00454;
 
@@ -255,7 +291,7 @@
 
     setInterval(simulateDataUpdates, 10000);
 
-    simulateDataUpdates();
+    simulateDataUpdates();*/
 </script>
 </body>
 </html>
