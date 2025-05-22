@@ -92,7 +92,7 @@
     let activeUserId = null;
 
     function connectWebSocket() {
-        const socket = new WebSocket('wss://geo.tmp.codrs.ru/map/ws');
+        const socket = new WebSocket('ws://localhost:8080/map/ws');
             
         socket.onopen = () => {
             console.log('WebSocket connected');
@@ -100,10 +100,12 @@
             
         socket.onmessage = (event) => {
             try {
+                console.log('Raw message:', event);
                 const data = JSON.parse(event.data);
+                console.log('Parsed data:', data);
                     
-                if (data.id && data.lat && data.lng) {
-                    updateUserPosition(data.id, data.lat, data.lng);
+                if (data.user_name && data.lon && data.lat) {
+                    updateUserPosition(data.user_name, data.lon, data.lat);
                 }
             } catch (error) {
                 console.error('Error parsing message:', error);

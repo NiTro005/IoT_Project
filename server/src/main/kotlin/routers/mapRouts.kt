@@ -13,7 +13,7 @@ fun Application.mapRouts() {
     routing {
 
         webSocket("/map/ws"){
-            webSocketController.webSocetControlleer(incoming, outgoing)
+            webSocketController.webSocketController(incoming, outgoing)
         }
         get("/map") {
             mapController.mapGet(call);
