@@ -99,18 +99,24 @@
         };
             
         socket.onmessage = (event) => {
-            try {
-                console.log('Raw message:', event);
-                const data = JSON.parse(event.data);
-                console.log('Parsed data:', data);
-                    
-                if (data.user_name && data.lon && data.lat) {
-                    updateUserPosition(data.user_name, data.lat, data.lon);
+    try {
+        const data = JSON.parse(event.data);
+        console.log('Received data:', data);
+
+        if (Array.isArray(data)) {
+            data.forEach(item => {
+                if (item.user_name && item.lat && item.lon) {
+                    updateUserPosition(item.user_name, item.lat, item.lon);
                 }
-            } catch (error) {
-                console.error('Error parsing message:', error);
-            }
-        };
+            });
+        }
+        else if (data.user_name && data.lat && data.lon) {
+            updateUserPosition(data.user_name, data.lat, data.lon);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
             
         socket.onclose = () => {
             console.log('WebSocket disconnected');
