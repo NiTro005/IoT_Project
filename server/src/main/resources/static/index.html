@@ -199,7 +199,7 @@
         userItem.textContent = `User ${userId}`;
         userItem.style.backgroundColor = users[userId].color;
 
-        userItem.addEventListener('click', () => {
+        userItem.addEventListener('click', function() {
             const clickedUserId = this.getAttribute('data-user-id');
 
                 if (activeUserId === clickedUserId) {
